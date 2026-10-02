@@ -60,7 +60,7 @@
             { id: 'art', level: 'middle', dept: '미술과', name: '미술', code: '[9미02-03]', desc: '팝아트 포스터, 공공 미술 비오톱 설계, 업사이클링 정크아트' },
             { id: 'tech', level: 'middle', dept: '기술·가정', name: '기술·가정', code: '[9기02-06]', desc: '저탄소 식단 개발, 업사이클링 패션, 스마트 그린 홈 적정기술 설계' },
 
-            // 고등학교 과목 (확정 6개 과목)
+            // 고등학교 과목 (6개)
             { id: 'kor_h', level: 'high', dept: '국어과', name: '공통국어', code: '[10공국02-02]', desc: '생태 심층 학술 논평 작성 및 환경 매체 비평 프로젝트' },
             { id: 'math_h', level: 'high', dept: '수학과', name: '공통수학', code: '[10공수01-03]', desc: '생태계 개체 수 변화 함수 모델링 및 수치 분석' },
             { id: 'sci_h', level: 'high', dept: '과학과', name: '통합과학', code: '[10통과05-02]', desc: '군집 생물 다양성 지수 산출 및 수생태계 변화 추적' },
@@ -252,9 +252,10 @@
                     tasks: ['생태 현장 데이터 수집', '데이터 정제 및 분석', '정책 제안 및 결과보고서 제출']
                 };
 
-                // 학교급에 따른 파일 경로 자동 할당
-                const guidePdf = selectedSchool.id === 'high' ? './high_guide1.pdf' : './high_guide1.pdf';
-                const studentPdf = selectedSchool.id === 'high' ? './high_guide2.pdf' : './middle_guide2.pdf';
+                // ★ 동적 파일 연결 완벽 수정 (학교급별 분기)
+                const isHigh = selectedSchool.id === 'high';
+                const guidePdf = './high_guide1.pdf'; // 공용 지도안 파일명
+                const studentPdf = isHigh ? './high_guide2.pdf' : './middle_guide2.pdf';
 
                 main.innerHTML = `
                     <div class="space-y-4">
@@ -272,8 +273,8 @@
                                 </ul>
                             </div>
                             <div class="flex gap-2">
-                                <a href="${guidePdf}" target="_blank" download class="flex-1 bg-white border border-slate-300 text-slate-800 text-xs py-2 rounded-lg font-medium hover:bg-slate-50 text-center flex items-center justify-center">📄 지도안 다운로드</a>
-                                <a href="${studentPdf}" target="_blank" download class="flex-1 bg-white border border-slate-300 text-slate-800 text-xs py-2 rounded-lg font-medium hover:bg-slate-50 text-center flex items-center justify-center">📱 학생용 가이드</a>
+                                <a href="${guidePdf}" download="${selectedSchool.name}_지도안.pdf" target="_blank" class="flex-1 bg-white border border-slate-300 text-slate-800 text-xs py-2 rounded-lg font-medium hover:bg-slate-50 text-center flex items-center justify-center">📄 지도안 다운로드</a>
+                                <a href="${studentPdf}" download="${selectedSchool.name}_학생용가이드.pdf" target="_blank" class="flex-1 bg-white border border-slate-300 text-slate-800 text-xs py-2 rounded-lg font-medium hover:bg-slate-50 text-center flex items-center justify-center">📱 학생용 가이드</a>
                             </div>
                         </div>
                     </div>
@@ -298,7 +299,7 @@
                 `;
             } else if (currentStep === 6) {
                 const proj = PROJECT_MAP[selectedZone.id]?.[selectedSubject.id] || { title: '📌 맞춤형 생태 탐구 프로젝트' };
-                const finalGuidePdf = selectedSchool.id === 'high' ? './high_guide1.pdf' : './high_guide1.pdf';
+                const finalGuidePdf = './high_guide1.pdf';
 
                 main.innerHTML = `
                     <div class="text-center py-6 space-y-4">
@@ -314,7 +315,7 @@
                             <div><span class="font-bold">일시:</span> ${selectedDate}</div>
                         </div>
                         <div class="space-y-2 pt-2">
-                            <a href="${finalGuidePdf}" target="_blank" download class="block w-full bg-emerald-600 text-white text-xs py-3 rounded-xl font-bold shadow hover:bg-emerald-700 text-center">📄 행정 결재용 서류 패키지 다운로드</a>
+                            <a href="${finalGuidePdf}" download="${selectedSchool.name}_서류패키지.pdf" target="_blank" class="block w-full bg-emerald-600 text-white text-xs py-3 rounded-xl font-bold shadow hover:bg-emerald-700 text-center">📄 행정 결재용 서류 패키지 다운로드</a>
                         </div>
                     </div>
                 `;
