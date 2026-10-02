@@ -165,7 +165,6 @@
         let selectedExpert = EXPERTS[0];
         let selectedDate = '2026-10-14';
 
-        // 헬퍼: 현재 상태를 실시간 검사하여 정확한 파일 경로 반환
         function getPdfFileName(type) {
             const isMiddle = selectedSchool.id === 'middle';
             if (type === 'guide') {
@@ -177,10 +176,11 @@
         }
 
         function render() {
+            // 인디케이터 업데이트
             for (let i = 1; i <= 5; i++) {
                 const nav = document.getElementById(`step-nav-${i}`);
                 if (nav) {
-                    nav.className = i <= currentStep ? 'text-emerald-600 font-bold' : '';
+                    nav.className = i <= currentStep ? 'text-emerald-600 font-bold' : 'text-slate-400';
                 }
             }
 
@@ -327,25 +327,24 @@
             }
         }
 
-        // 선택 함수들
+        // 선택 및 단계 이동 함수
         function selectSchool(id) {
             selectedSchool = SCHOOL_LEVELS.find(s => s.id === id);
-            // 해당 학교급에 맞춰 과목도 강제로 첫 번째 과목으로 동기화
             const matchSubjects = SUBJECTS.filter(s => s.level === id);
             if (matchSubjects.length > 0) {
                 selectedSubject = matchSubjects[0];
             }
-            render();
+            changeStep(1);
         }
 
         function selectZone(id) {
             selectedZone = ZONES.find(z => z.id === id);
-            render();
+            changeStep(1);
         }
 
         function selectSubject(id) {
             selectedSubject = SUBJECTS.find(s => s.id === id);
-            render();
+            changeStep(1);
         }
 
         function selectExpert(id) {
