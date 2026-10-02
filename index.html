@@ -160,14 +160,28 @@
 
         // 애플리케이션 상태 변수
         let currentStep = 1;
-        let selectedSchool = SCHOOL_LEVELS[0];
+        let selectedSchool = SCHOOL_LEVELS[0]; // 기본: 중학교
         let selectedZone = ZONES[0];
-        let selectedSubject = SUBJECTS[0];
+        let selectedSubject = SUBJECTS[0]; // 기본: 중학교 국어
         let selectedExpert = EXPERTS[0];
         let selectedDate = '2026-10-14';
 
+        // 헬퍼 함수: 현재 학교급에 따른 파일 경로를 완벽히 반환
+        function getPdfPaths() {
+            if (selectedSchool.id === 'middle') {
+                return {
+                    guide: './middle_guide1.pdf',
+                    student: './middle_guide2.pdf'
+                };
+            } else {
+                return {
+                    guide: './high_guide1.pdf',
+                    student: './high_guide2.pdf'
+                };
+            }
+        }
+
         function render() {
-            // 네비게이션 단계 표시
             for (let i = 1; i <= 5; i++) {
                 const nav = document.getElementById(`step-nav-${i}`);
                 if (nav) {
@@ -175,7 +189,6 @@
                 }
             }
 
-            // 하단 버튼 제어
             const btnPrev = document.getElementById('btn-prev');
             const btnNext = document.getElementById('btn-next');
             const footer = document.getElementById('footer-buttons');
@@ -189,7 +202,6 @@
             if (currentStep === 6) footer.classList.add('hidden');
             else footer.classList.remove('hidden');
 
-            // 메인 화면 랜더링
             const main = document.getElementById('main-content');
             
             if (currentStep === 1) {
@@ -252,10 +264,8 @@
                     tasks: ['생태 현장 데이터 수집', '데이터 정제 및 분석', '정책 제안 및 결과보고서 제출']
                 };
 
-                // ★ 동적 파일 연결 완벽 수정 (학교급별 분기)
-                const isHigh = selectedSchool.id === 'high';
-                const guidePdf = './high_guide1.pdf'; // 공용 지도안 파일명
-                const studentPdf = isHigh ? './high_guide2.pdf' : './middle_guide2.pdf';
+                // 현재 선택된 학교급 기준으로 파일 경로 확실히 계산
+                const pdfs = getPdfPaths();
 
                 main.innerHTML = `
                     <div class="space-y-4">
@@ -273,8 +283,8 @@
                                 </ul>
                             </div>
                             <div class="flex gap-2">
-                                <a href="${guidePdf}" download="${selectedSchool.name}_지도안.pdf" target="_blank" class="flex-1 bg-white border border-slate-300 text-slate-800 text-xs py-2 rounded-lg font-medium hover:bg-slate-50 text-center flex items-center justify-center">📄 지도안 다운로드</a>
-                                <a href="${studentPdf}" download="${selectedSchool.name}_학생용가이드.pdf" target="_blank" class="flex-1 bg-white border border-slate-300 text-slate-800 text-xs py-2 rounded-lg font-medium hover:bg-slate-50 text-center flex items-center justify-center">📱 학생용 가이드</a>
+                                <a href="${pdfs.guide}" download="${selectedSchool.name}_지도안.pdf" target="_blank" class="flex-1 bg-white border border-slate-300 text-slate-800 text-xs py-2 rounded-lg font-medium hover:bg-slate-50 text-center flex items-center justify-center">📄 지도안 다운로드</a>
+                                <a href="${pdfs.student}" download="${selectedSchool.name}_학생용가이드.pdf" target="_blank" class="flex-1 bg-white border border-slate-300 text-slate-800 text-xs py-2 rounded-lg font-medium hover:bg-slate-50 text-center flex items-center justify-center">📱 학생용 가이드</a>
                             </div>
                         </div>
                     </div>
@@ -299,7 +309,7 @@
                 `;
             } else if (currentStep === 6) {
                 const proj = PROJECT_MAP[selectedZone.id]?.[selectedSubject.id] || { title: '📌 맞춤형 생태 탐구 프로젝트' };
-                const finalGuidePdf = './high_guide1.pdf';
+                const pdfs = getPdfPaths();
 
                 main.innerHTML = `
                     <div class="text-center py-6 space-y-4">
@@ -315,18 +325,20 @@
                             <div><span class="font-bold">일시:</span> ${selectedDate}</div>
                         </div>
                         <div class="space-y-2 pt-2">
-                            <a href="${finalGuidePdf}" download="${selectedSchool.name}_서류패키지.pdf" target="_blank" class="block w-full bg-emerald-600 text-white text-xs py-3 rounded-xl font-bold shadow hover:bg-emerald-700 text-center">📄 행정 결재용 서류 패키지 다운로드</a>
+                            <a href="${pdfs.guide}" download="${selectedSchool.name}_서류패키지.pdf" target="_blank" class="block w-full bg-emerald-600 text-white text-xs py-3 rounded-xl font-bold shadow hover:bg-emerald-700 text-center">📄 행정 결재용 서류 패키지 다운로드</a>
                         </div>
                     </div>
                 `;
             }
         }
 
-        // 상태 핸들러
+        // 핸들러: 학교급 선택 시 해당 학교급의 첫 번째 과목으로 자동 설정
         function selectSchool(id) {
             selectedSchool = SCHOOL_LEVELS.find(s => s.id === id);
             const filtered = SUBJECTS.filter(s => s.level === id);
-            if (filtered.length > 0) selectedSubject = filtered[0];
+            if (filtered.length > 0) {
+                selectedSubject = filtered[0]; // 중학교 선택시 중학교 과목(국어)으로 동기화
+            }
             render();
         }
 
@@ -352,7 +364,6 @@
             render();
         }
 
-        // 앱 최초 실행
         render();
     </script>
 </body>
