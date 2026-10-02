@@ -47,7 +47,7 @@
         ];
 
         const SUBJECTS = [
-            // 중학교 과목 (10개)
+            // 중학교 과목
             { id: 'kor', level: 'middle', dept: '국어과', name: '국어', code: '[9국03-04]', desc: '설득하는 글쓰기, 환경 비평 및 공익광고 카피 작성' },
             { id: 'math', level: 'middle', dept: '수학과', name: '수학', code: '[9수04-08]', desc: '생태 데이터 통계 분석, 기하학적 최소 거리 분석 및 수학 모델링' },
             { id: 'eng', level: 'middle', dept: '영어과', name: '영어', code: '[9영04-02]', desc: '글로벌 연설문 작성, 영문 카드뉴스 및 친환경 가이드북 제작' },
@@ -59,7 +59,7 @@
             { id: 'art', level: 'middle', dept: '미술과', name: '미술', code: '[9미02-03]', desc: '팝아트 포스터, 공공 미술 비오톱 설계, 업사이클링 정크아트' },
             { id: 'tech', level: 'middle', dept: '기술·가정', name: '기술·가정', code: '[9기02-06]', desc: '저탄소 식단 개발, 업사이클링 패션, 스마트 그린 홈 적정기술 설계' },
 
-            // 고등학교 과목 (6개)
+            // 고등학교 과목
             { id: 'kor_h', level: 'high', dept: '국어과', name: '공통국어', code: '[10공국02-02]', desc: '생태 심층 학술 논평 작성 및 환경 매체 비평 프로젝트' },
             { id: 'math_h', level: 'high', dept: '수학과', name: '공통수학', code: '[10공수01-03]', desc: '생태계 개체 수 변화 함수 모델링 및 수치 분석' },
             { id: 'sci_h', level: 'high', dept: '과학과', name: '통합과학', code: '[10통과05-02]', desc: '군집 생물 다양성 지수 산출 및 수생태계 변화 추적' },
@@ -161,7 +161,7 @@
         let currentStep = 1;
         let selectedSchool = SCHOOL_LEVELS[0]; // middle
         let selectedZone = ZONES[0];
-        let selectedSubject = SUBJECTS[0]; // kor (middle)
+        let selectedSubject = SUBJECTS[0]; // kor
         let selectedExpert = EXPERTS[0];
         let selectedDate = '2026-10-14';
 
@@ -327,24 +327,24 @@
             }
         }
 
-        // 선택 및 단계 이동 함수
+        // 선택 함수 (자동 이동 없이 UI만 갱신)
         function selectSchool(id) {
             selectedSchool = SCHOOL_LEVELS.find(s => s.id === id);
             const matchSubjects = SUBJECTS.filter(s => s.level === id);
             if (matchSubjects.length > 0) {
                 selectedSubject = matchSubjects[0];
             }
-            changeStep(1);
+            render(); // 화면 강조 표시만 다시 렌더링
         }
 
         function selectZone(id) {
             selectedZone = ZONES.find(z => z.id === id);
-            changeStep(1);
+            render();
         }
 
         function selectSubject(id) {
             selectedSubject = SUBJECTS.find(s => s.id === id);
-            changeStep(1);
+            render();
         }
 
         function selectExpert(id) {
